@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cascade UI | Animation Plugin Documentation</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #121212; color: #E0E0E0; }
+        .sidebar { background-color: #1f1f1f; }
+        .nav-link.active { background-color: #2a2a2a; border-left: 4px solid #0078D4; color: #ffffff; font-weight: 600; }
+        .nav-link:not(.active):hover { background-color: #2a2a2a; }
+        .content-section { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .code-block { background-color: #2a2a2a; border: 1px solid #333; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+        .api-card { border: 1px solid #333; background-color: #1f1f1f; }
+        .api-card h3 { color: #0078D4; }
+        .changelog-date { color: #aaaaaa; }
+    </style>
+</head>
+<body>
+
+    <!-- Main App Container -->
+    <div id="app" class="flex min-h-screen">
+
+        <!-- Sidebar Navigation -->
+        <div class="sidebar w-64 p-4 shadow-lg flex flex-col fixed h-full z-10">
+            <h1 class="text-2xl font-bold mb-6 text-white tracking-wider">CASCADE UI</h1>
+            
+            <nav class="space-y-2">
+                <a href="#overview" class="nav-link block p-3 rounded-r-lg" data-target="overview">Overview</a>
+                <a href="#api" class="nav-link block p-3 rounded-r-lg" data-target="api">API Reference (AnimationService)</a>
+                <a href="#editor-features" class="nav-link block p-3 rounded-r-lg" data-target="editor-features">Editor Features</a>
+                <a href="#changelog" class="nav-link block p-3 rounded-r-lg" data-target="changelog">Changelog</a>
+                <a href="#licensing" class="nav-link block p-3 rounded-r-lg" data-target="licensing">Licensing</a>
+            </nav>
+
+            <footer class="mt-auto pt-4 border-t border-gray-700 text-xs text-gray-500">
+                &copy; 2025 BerDeryaDev1010
+            </footer>
+        </div>
+
+        <!-- Main Content Area -->
+        <main class="ml-64 flex-1 p-10">
+            
+            <!-- Overview Section -->
+            <section id="overview" class="content-section">
+                <h2 class="text-4xl font-bold mb-4 text-white">Cascade UI: The Ultimate UI Animation System</h2>
+                <p class="mb-6 text-lg text-gray-400">Cascade UI is a powerful Roblox Studio plugin built to solve the limitations of traditional UI animation. It provides a real-time WYSIWYG editor and a highly optimized, conflict-free runtime library, the `AnimationService`.</p>
+
+                <h3 class="text-2xl font-semibold mb-3 mt-8">Core Philosophy: Compositor Engine</h3>
+                <p class="mb-4">Unlike standard `TweenService` which locks properties, Cascade's `AnimationService` uses a compositor engine. This allows multiple tracks and animations to influence the same object simultaneously (e.g., a 'Hover' wobble on a 'Slide In' movement) without fighting each other.</p>
+                
+                <!-- IMAGE: trainbtn_anim.gif -->
+                <img src="trainbtn_anim.gif" alt="Example of a clean button animation created with Cascade UI" class="my-6 rounded-lg max-w-full">
+
+                <div class="code-block">
+                    <pre><code class="language-luau">-- Requiring the Animation Service from your game's storage
+local AnimationService = require(game.ReplicatedStorage.CascadeAnimations.AnimationService)</code></pre>
+                </div>
+            </section>
+
+            <!-- API Reference Section -->
+            <section id="api" class="content-section hidden">
+                <h2 class="text-4xl font-bold mb-6 text-white">API Reference: AnimationService</h2>
+                <p class="mb-8 text-gray-400">The core runtime module is highly optimized for performance and is designed to be required and used directly in your live game environment.</p>
+
+                <!-- API Card: Preprocess -->
+                <div class="api-card p-6 rounded-lg mb-6">
+                    <h3 class="text-xl font-semibold mb-2">.Preprocess(Config)</h3>
+                    <p class="text-gray-400 mb-4">Converts raw <code>AnimationConfig</code> data (loaded from the editor) into an optimized <code>ProcessedAnimation</code> object ready for immediate playback. This is an **optional but highly recommended** step for performance.</p>
+                    <p class="text-yellow-300 font-bold text-sm mb-2">Why Preprocess?</p>
+                    <ul class="list-disc list-inside ml-4 text-sm text-gray-300 mb-4">
+                        <li>It sorts keyframes, resolves property paths (e.g., <code>UDim2.X.Scale</code>), and validates the structure.</li>
+                        <li>By running <code>.Preprocess()</code> once, you avoid running these expensive checks repeatedly inside <code>.PlayBatch()</code> or sequential <code>.Play()</code> calls, saving CPU time.</li>
+                    </ul>
+                    <div class="code-block">
+                        <pre><code class="language-luau">local MyAnimData = require(game.ReplicatedStorage.CascadeAnimations.MyAnim)
+
+-- 1. Preprocess once (optimized for bulk use)
+local ProcessedAnim = AnimationService.Preprocess(MyAnimData)
+
+-- 2. Use the optimized data for all subsequent calls
+AnimationService.Play(Button1, ProcessedAnim)
+AnimationService.PlayBatch(TileList, ProcessedAnim, { Stagger = 0.1 })</code></pre>
+                    </div>
+                </div>
+
+                <!-- API Card: Play -->
+                <div class="api-card p-6 rounded-lg mb-6">
+                    <h3 class="text-xl font-semibold mb-2">.Play(Instance, ConfigOrProcessed, Options)</h3>
+                    <p class="text-gray-400 mb-4">Starts an animation on a single instance. Returns a custom Signal object for completion tracking.</p>
+                    <p class="font-bold text-sm mb-2">Arguments:</p>
+                    <ul class="list-disc list-inside ml-4 text-sm text-gray-300 mb-4">
+                        <li><code>Instance</code>: The GuiObject or Model to animate.</li>
+                        <li><code>ConfigOrProcessed</code>: The animation data (either raw or pre-processed).</li>
+                        <li><code>Options?</code>: Table of <code>PlayOptions</code> to customize playback (see section below).</li>
+                    </ul>
+                    <!-- IMAGE: hover_code.png -->
+                    <p class="text-sm text-gray-400 mb-2 mt-4">Example: Connecting a hover animation with reverse playback:</p>
+                    <div class="code-block">
+                        <img src="hover_code.png" alt="Luau code example connecting button mouse events to AnimationService.Play and AnimationService.Play with Reverse = true." class="my-2 rounded-lg max-w-full">
+                    </div>
+                </div>
+
+                <!-- API Card: Stop -->
+                <div class="api-card p-6 rounded-lg mb-6">
+                    <h3 class="text-xl font-semibold mb-2">.Stop(Instance)</h3>
+                    <p class="text-gray-400 mb-4">Immediately halts all active Cascade animations running on the given instance.</p>
+                    <div class="code-block">
+                        <pre><code class="language-luau">-- Stop the animation on MyButton, preserving its current position
+AnimationService.Stop(MyButton)
+
+-- Stop animations on multiple objects (also available: .StopBatch({Instances}))
+AnimationService.StopBatch({Button1, Button2, Button3})</code></pre>
+                    </div>
+                </div>
+                
+                <!-- API Card: SetTime -->
+                <div class="api-card p-6 rounded-lg mb-6">
+                    <h3 class="text-xl font-semibold mb-2">.SetTime(Instance, ConfigOrProcessed, Time)</h3>
+                    <p class="text-gray-400 mb-4">Instantly snaps the animated object to the exact visual state defined at a specific timestamp (in seconds).</p>
+                    <div class="code-block">
+                        <pre><code class="language-luau">-- Snap 'MyButton' 1.5 seconds into the animation
+AnimationService.SetTime(MyButton, MyAnimData, 1.5)
+
+-- Snap to start (also available: .SetToStart(Instance, Config))
+AnimationService.SetToStart(MyButton, MyAnimData)</code></pre>
+                    </div>
+                </div>
+
+                <!-- API Card: PlayBatch -->
+                <div class="api-card p-6 rounded-lg mb-6">
+                    <h3 class="text-xl font-semibold mb-2">.PlayBatch(Instances, ConfigOrProcessed, Options)</h3>
+                    <p class="text-gray-400 mb-4">Plays an animation across a collection of instances. Supports staggering for sequenced effects.</p>
+                    <p class="font-bold text-sm mb-2">Key Option:</p>
+                    <ul class="list-disc list-inside ml-4 text-sm text-gray-300 mb-4">
+                        <li><code>Stagger</code>: Time in seconds to delay the start of each subsequent animation.</li>
+                    </ul>
+                    <!-- IMAGE: axis_isolation_staggered_items.gif -->
+                    <p class="text-sm text-gray-400 mb-2 mt-4">Example of staggered UI elements appearing in sequence:</p>
+                    <img src="axis_isolation_staggered_items.gif" alt="GIF demonstrating several UI elements appearing in a staggered sequence, useful for complex HUD reveals." class="my-2 rounded-lg max-w-full">
+                </div>
+                
+                <!-- PlayOptions Detail Section -->
+                <h3 class="text-3xl font-bold mb-4 mt-12 text-white">Understanding PlayOptions</h3>
+                <p class="mb-4 text-gray-400">The optional <code>Options</code> table passed to <code>.Play()</code> and <code>.PlayBatch()</code> determines key behaviors for the animation lifecycle.</p>
+                <div class="space-y-4">
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <p class="font-semibold text-white"><code>Loop: boolean | number</code></p>
+                        <p class="text-sm text-gray-300 mt-1">If <code>true</code>, loops infinitely. If a <code>number</code> (e.g., <code>3</code>), loops that many times.</p>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <p class="font-semibold text-white"><code>Delay: number</code></p>
+                        <p class="text-sm text-gray-300 mt-1">Initial delay (in seconds) before the animation begins playing.</p>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <p class="font-semibold text-white"><code>Stagger: number</code></p>
+                        <p class="text-sm text-gray-300 mt-1">Only applicable to <code>.PlayBatch()</code>. Specifies the delay (in seconds) between the start of each instance's animation.</p>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <p class="font-semibold text-white"><code>Reverse: boolean</code></p>
+                        <p class="text-sm text-gray-300 mt-1">If <code>true</code>, the animation plays backward from the end keyframe to the start keyframe.</p>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <p class="font-semibold text-white"><code>Reset: boolean</code></p>
+                        <p class="text-sm text-gray-300 mt-1">If <code>true</code>, the object's properties will revert to the exact values they held BEFORE <code>.Play()</code> was called when the animation completes or is stopped.</p>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <p class="font-semibold text-white"><code>ResetToStart: boolean</code></p>
+                        <p class="text-sm text-gray-300 mt-1">If <code>true</code>, the object will snap to the values defined at **Frame 0** of the animation data when the animation completes or is stopped.</p>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Editor Features Section -->
+            <section id="editor-features" class="content-section hidden">
+                <h2 class="text-4xl font-bold mb-6 text-white">Editor Features & Workflow</h2>
+                
+                <!-- IMAGE: editor_fullview.png -->
+                <img src="editor_fullview.png" alt="Full view of the Cascade UI plugin editor showing the timeline, keyframes for Size, Rotation, and Position, and the toolbar." class="my-6 rounded-lg max-w-full border border-gray-700">
+
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-semibold text-white">Robust Workflow Management</h3>
+                    <ul class="list-disc list-inside ml-4 space-y-3 text-gray-300">
+                        <li>
+                            <strong class="text-blue-300">Auto-Recorder:</strong> Record keyframes simply by clicking the record button and changing properties in the Roblox Explorer/Properties window.
+                        </li>
+                        <li>
+                            <strong class="text-blue-300">Strict State Separation:</strong> When you start editing an object, the plugin captures its original state. When you **deselect** the object, it is perfectly restored to its pre-animation appearance.
+                        </li>
+                        <li>
+                            <strong class="text-blue-300">Multi-Select & Drag:</strong> Select multiple keyframes and move them as a group while preserving their relative timing.
+                            <!-- IMAGE: cut_drag_selection.gif -->
+                            <img src="cut_drag_selection.gif" alt="GIF demonstrating multi-keyframe selection via box select and dragging the entire group across the timeline." class="my-2 rounded-lg max-w-sm border border-gray-700">
+                        </li>
+                    </ul>
+
+                    <h3 class="text-2xl font-semibold text-white pt-4">Optimization and Control</h3>
+                    <ul class="list-disc list-inside ml-4 space-y-3 text-gray-300">
+                        <li>
+                            <strong class="text-blue-300">Relative Mode (∆):</strong> Toggle any track to be relative to the object's current runtime position, allowing easy layering of effects (e.g., a global menu slide + a localized button pulse).
+                            <!-- IMAGE: hover_anim.gif -->
+                            <img src="hover_anim.gif" alt="GIF showing smooth, localized hover animations on multiple buttons simultaneously, enabled by Relative Mode." class="my-2 rounded-lg max-w-xs border border-gray-700">
+                        </li>
+                        <li>
+                            <strong class="text-blue-300">Smart Inspector:</strong> Edit keyframe values using complex syntax (e.g., <code>{0.5, 10}</code> for UDim) and the system automatically coerces types, preventing runtime errors.
+                            <!-- IMAGE: SmartInspector.gif -->
+                            <img src="SmartInspector.gif" alt="GIF showing a user typing a UDim2 tuple into the inspector and the system parsing it correctly." class="my-2 rounded-lg max-w-full border border-gray-700">
+                        </li>
+                        <li>
+                            <strong class="text-blue-300">Granular Sub-Property Control:</strong> Animate specific parts of complex types, such as animating only <code>Size.X.Scale</code>.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Changelog Section -->
+            <section id="changelog" class="content-section hidden">
+                <h2 class="text-4xl font-bold mb-6 text-white">Changelog</h2>
+                <div id="changelog-content" class="space-y-8">
+                    <!-- Changelog entries will be injected here by JavaScript -->
+                </div>
+            </section>
+            
+            <!-- Licensing Section -->
+            <section id="licensing" class="content-section hidden">
+                <h2 class="text-4xl font-bold mb-6 text-white">Documentation Licensing</h2>
+                <p class="mb-4 text-gray-400">The code of the Cascade UI Plugin itself is proprietary. However, this documentation and all text/prose within this repository is released under the highly permissive MIT License.</p>
+
+                <div class="bg-gray-800 p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-2">MIT License</h3>
+                    <p class="text-sm text-gray-300 mt-1">This license allows maximum freedom. You can use, copy, modify, and distribute the documentation for any purpose (including commercial use), provided you retain the original copyright and license notice.</p>
+                    <p class="text-sm text-yellow-300 mt-3 font-semibold">See the <code>LICENSE.md</code> file in the repository for the full text.</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('main');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.content-section');
+
+            // --- Changelog Data (Hardcoded from your latest file) ---
+            const changelogData = [
+                {
+                    version: "1.6.0",
+                    date: "2025-12-05",
+                    added: [],
+                    changed: [
+                        "Architectural Overhaul: Rewrote the core AnimationService runtime engine for massive performance gains.",
+                        "Centralized Loop: Switched from one Heartbeat connection per object to a single, global connection for all active animations, drastically reducing CPU overhead.",
+                        "Optimized Accessors: Implemented Setter and Lerp Closures to eliminate expensive runtime operations (string parsing, pcall, typeof checks) during the animation frame cycle.",
+                        "Reference Safety: Ensured Relative Mode captures static, immutable BaseValues to prevent accelerated drift or 'flying off' bugs."
+                    ],
+                    fixed: [
+                        "Relative Mode: Fixed the infinite acceleration bug by ensuring the base value is captured once upon Play, not read every frame.",
+                        "Reverse Playback: Fixed the cursor logic to correctly handle time decrementing, allowing smooth reverse animation and scrubbing."
+                    ]
+                },
+                {
+                    version: "1.5.3",
+                    date: "2025-12-04",
+                    added: [
+                        "Batch State API: Expanded the AnimationService API with optimized batch functions for high-performance state management.",
+                        "SetTimeBatch(instances, config, time): Sets the animation time for a list of instances. Pre-processes data once to minimize overhead.",
+                        "SetToStartBatch(instances, config): Instantly snaps a list of instances to their frame 0 state."
+                    ],
+                    changed: [],
+                    fixed: []
+                },
+                {
+                    version: "1.5.2",
+                    date: "2025-12-04",
+                    added: [],
+                    changed: [
+                        "Strict State Separation: Overhauled the state management logic to prevent data corruption. The 'Pre-Animation' state is now captured only upon selection and is never modified during the session."
+                    ],
+                    fixed: [
+                        "Interpolation Glitch: Fixed a critical bug where values would 'snap' or 'toggle' instead of interpolating smoothly. This was due to non-numeric types being stored.",
+                        "Frame 0 Corruption: Fixed a bug where clicking 'Stop' would trigger the Auto-Recorder, overwriting Frame 0 with the object's reset position.",
+                        "Reverse Playback: Fixed logic to allow the timeline cursor to move backwards correctly, enabling smooth reverse animation."
+                    ]
+                },
+                {
+                    version: "1.5.1",
+                    date: "2025-12-03",
+                    fixed: [
+                        "Preplaystate: Fixed the issue where the object was not returning to the pre-play state."
+                    ]
+                },
+                {
+                    version: "1.5.0",
+                    date: "2025-12-03",
+                    added: [
+                        "Manual State Control: Added new API methods to AnimationService for precise control over object state without needing to play the animation.",
+                        "SetTime(instance, config, time): Snaps the object to the exact state defined at the given timestamp.",
+                        "SetToStart(instance, config): Helper function to instantly snap the object to the first frame (Time 0).",
+                        "Reverse Playback: Added a Reverse option to PlayOptions. When set to true, the animation plays backwards."
+                    ],
+                    changed: [],
+                    fixed: []
+                },
+                {
+                    version: "1.4.0",
+                    date: "2025-12-03",
+                    added: [
+                        "Initial State Capture: The editor now captures the state of an object before you start animating it.",
+                        "Auto-Reset: When you deselect an object or change the target, the object automatically reverts to its pre-animated state, keeping your workspace clean.",
+                        "AnimationService Reset Options: Added powerful new options to AnimationService.Play: Reset = true and ResetToStart = true."
+                    ],
+                    changed: [],
+                    fixed: []
+                },
+                // Placeholder for older entries
+                {
+                    version: "1.3.0",
+                    date: "2025-12-02",
+                    added: [ "Save Workflow Overhaul", "Hierarchy Validation", "Keybind System Upgrade"],
+                    changed: ["UI Polish", "Input Handling"],
+                    fixed: ["Multi-Select Dragging", "Z-Index Issues"]
+                },
+                {
+                    version: "1.0.0",
+                    date: "2025-11-29",
+                    added: ["Compositor Engine", "Sub-Channel Animation", "Smart Relative Mode (∆)", "WYSIWYG Editor", "Auto-Recorder"],
+                    changed: [],
+                    fixed: []
+                }
+            ];
+
+            // --- Functionality ---
+
+            // 1. Render Changelog
+            const changelogContainer = document.getElementById('changelog-content');
+            changelogData.forEach(entry => {
+                const entryHtml = `
+                    <div class="p-4 rounded-lg api-card">
+                        <h3 class="text-2xl font-bold mb-1 text-white">${entry.version}</h3>
+                        <p class="changelog-date text-sm">${entry.date}</p>
+                        
+                        ${entry.added && entry.added.length > 0 ? `
+                        <p class="font-semibold text-green-400 mt-4 mb-1">Added:</p>
+                        <ul class="list-disc list-inside ml-4 text-sm text-gray-300">
+                            ${entry.added.map(item => `<li>${item}</li>`).join('')}
+                        </ul>` : ''}
+                        
+                        ${entry.changed && entry.changed.length > 0 ? `
+                        <p class="font-semibold text-yellow-400 mt-4 mb-1">Changed:</p>
+                        <ul class="list-disc list-inside ml-4 text-sm text-gray-300">
+                            ${entry.changed.map(item => `<li>${item}</li>`).join('')}
+                        </ul>` : ''}
+                        
+                        ${entry.fixed && entry.fixed.length > 0 ? `
+                        <p class="font-semibold text-red-400 mt-4 mb-1">Fixed:</p>
+                        <ul class="list-disc list-inside ml-4 text-sm text-gray-300">
+                            ${entry.fixed.map(item => `<li>${item}</li>`).join('')}
+                        </ul>` : ''}
+                    </div>
+                `;
+                changelogContainer.innerHTML += entryHtml;
+            });
+
+            // 2. Navigation Logic
+            const showSection = (targetId) => {
+                sections.forEach(section => {
+                    section.classList.add('hidden');
+                });
+                document.getElementById(targetId).classList.remove('hidden');
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-target') === targetId) {
+                        link.classList.add('active');
+                    }
+                });
+            };
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = e.currentTarget.getAttribute('data-target');
+                    history.pushState(null, '', e.currentTarget.href); // Update URL hash
+                    showSection(targetId);
+                });
+            });
+
+            // Handle initial load and deep linking
+            const initialHash = window.location.hash.substring(1) || 'overview';
+            const initialTarget = initialHash || 'overview';
+            showSection(initialTarget);
+            
+            // Check if a navigation link corresponds to the hash and activate it
+            const activeLink = document.querySelector(`.nav-link[data-target="${initialTarget}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            } else {
+                // Default to overview if hash is invalid
+                document.querySelector('.nav-link[data-target="overview"]').classList.add('active');
+            }
+        });
+    </script>
+
+</body>
+</html>
