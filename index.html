@@ -242,6 +242,20 @@ AnimationService.SetToStart(MyButton, MyAnimData)</code></pre>
             const sections = document.querySelectorAll('.content-section');
 
             const changelogData = [
+
+                {
+                    version: "1.6.1",
+                    date: "2025-12-07",
+                    added: [
+                        "Boolean Logic: Added support for partial boolean inputs. You can now type 't', 'tr', 'f', or 'fal' to quickly set true/false values."
+                    ],
+                    changed: [
+                        "Inspector Color3: Switched Color3 display format from 0-1 floats to 0-255 integers (RGB) to match the native Properties window.",
+                    ],
+                    fixed: [
+                        "Inspector Inputs: Fixed an issue where boolean properties could not be set manually in the Inspector."
+                    ]
+                },
                 {
                     version: "1.6.0",
                     date: "2025-12-05",
