@@ -19,7 +19,7 @@
         .changelog-date { color: #aaaaaa; }
         .roadmap-item { border-left: 4px solid #4ade80; padding-left: 1rem; }
         .tip-card { border-left: 4px solid #facc15; background-color: #2a2a2a; padding: 1rem; margin-bottom: 1.5rem; }
-   
+    
         .feature-grid { 
             display: flex; 
             flex-direction: column; 
@@ -38,7 +38,7 @@
             max-height: 450px; 
             object-fit: contain; 
             object-position: center; 
-            border-bottom: 1px solid #333; 
+            border-top: 1px solid #333;
             margin: 0 auto; 
         }
     </style>
@@ -67,11 +67,11 @@
         <main class="ml-64 flex-1 p-10">
 
             <section id="overview" class="content-section">
-                <h2 class="text-4xl font-bold mb-4 text-white">The Smart, Conflict-Free Animation Engine</h2>
+                <h2 class="text-4xl font-bold mb-4 text-white">The One-Stop-Shop solution for UI Animations</h2>
                 <p class="mb-6 text-lg text-gray-400">Cascade UI isn't just another tween plugin. It's a full-blown layering system designed to handle complex UI states without the headache of property conflicts.</p>
 
                 <h3 class="text-2xl font-semibold mb-3 mt-8">Why use this?</h3>
-                <p class="mb-4 text-gray-400">Standard <code>TweenService</code> is dumb. It fights over properties. If you try to Hover (scale up) and Click (scale down) at the same time, they break.</p>
+                <p class="mb-4 text-gray-400">Standard <code>TweenService</code> is good but is limited. It fights over properties. If you try to Hover (scale up) and Click (scale down) at the same time, they break.</p>
                 <p class="mb-4 text-gray-400">Cascade's <code>AnimationService</code> is smart. It uses an <strong>Additive Accumulator</strong>. This means you can play a "Hover", a "Click", and a "Damage Shake" all on the same button, at the same time, and they blend perfectly.</p>
  
                 <div class="mb-6">
@@ -87,7 +87,7 @@ local AnimationService = require(game.ReplicatedStorage.CascadeAnimations.Animat
 
             <section id="tips" class="content-section hidden">
                 <h2 class="text-4xl font-bold mb-6 text-white">Tips & Best Practices</h2>
-                <p class="mb-8 text-gray-400">The engine is highly optimized, but efficient usage is key to scaling your UI to thousands of animated objects.</p>
+                <p class="mb-8 text-gray-400">The engine is optimized, but efficient usage is key to scaling your UI to thousands of animated objects.</p>
 
                 <div class="tip-card rounded-r-lg">
                     <h3 class="text-xl font-bold text-white mb-2">⚠ Critical: Memory Identity</h3>
@@ -284,37 +284,69 @@ AnimationService.SetTime(MyButton, MyAnim, 1.0)</code></pre>
                     
 
                     <div class="feature-card">
-                        <img src="axis_isolation_staggered_items.gif" alt="Staggered Animation Example" class="feature-img">
                         <div class="p-4">
                             <h3 class="text-xl font-bold text-white mb-2">Axis Isolation & Stagger</h3>
                             <p class="text-gray-400 text-sm">Most editors lock the whole <code>Size</code> property. Cascade lets you animate <code>Size.X</code> independently of <code>Size.Y</code>. Combined with the <strong>Stagger</strong> runtime feature (shown here), you can create complex, fluid reveals.</p>
                         </div>
+                        <img src="axis_isolation_staggered_items.gif" alt="Staggered Animation Example" class="feature-img">
                     </div>
 
         
                     <div class="feature-card">
-                        <img src="SmartInspector.gif" alt="Smart Inspector Input" class="feature-img">
                         <div class="p-4">
                             <h3 class="text-xl font-bold text-white mb-2">Smart Inspector</h3>
                             <p class="text-gray-400 text-sm">Don't fight with input fields. The inspector accepts loose syntax like <code>{0.5, 10}</code> for UDim and automatically formats it to Roblox standards.</p>
                         </div>
+                        <img src="SmartInspector.gif" alt="Smart Inspector Input" class="feature-img">
                     </div>
 
 
                     <div class="feature-card">
-                        <img src="cut_drag_selection.gif" alt="Multi-Select and Drag" class="feature-img">
                         <div class="p-4">
                             <h3 class="text-xl font-bold text-white mb-2">Multi-Select & Drag</h3>
                             <p class="text-gray-400 text-sm">Box-select multiple keyframes across different tracks and drag them as a group. Retiming complex animations takes seconds, not minutes.</p>
                         </div>
+                        <img src="cut_drag_selection.gif" alt="Multi-Select and Drag" class="feature-img">
                     </div>
 
                     <div class="feature-card">
-                        <img src="hover_anim.gif" alt="Relative Mode Example" class="feature-img">
                         <div class="p-4">
                             <h3 class="text-xl font-bold text-white mb-2">Relative Mode (∆)</h3>
                             <p class="text-gray-400 text-sm">The killer feature. Define animations as "offsets" (e.g., +10px size) rather than absolute values. This lets you layer hover effects on top of any layout without breaking it.</p>
                         </div>
+                        <img src="hover_anim.gif" alt="Relative Mode Example" class="feature-img">
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="p-4">
+                            <h3 class="text-xl font-bold text-white mb-2">Non-Destructive Editing</h3>
+                            <p class="text-gray-400 text-sm">Streamline your editing process with industry-standard <strong>Undo, Redo, Copy, Cut, and Paste</strong>. Duplicate keyframes across tracks or reverse mistakes instantly, ensuring a fluid and forgiving creative environment.</p>
+                        </div>
+                        <img src="clipboard_workflow.gif" alt="Clipboard and Undo" class="feature-img"> 
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="p-4">
+                            <h3 class="text-xl font-bold text-white mb-2">Customizable Keybinds</h3>
+                            <p class="text-gray-400 text-sm">Tailor the editor to your muscle memory. Remap every shortcut in the <strong>Keybind Settings</strong> to match your preferred workflow, ensuring a seamless editing experience.</p>
+                        </div>
+                        <img src="settings.gif" alt="Keybind Settings" class="feature-img">
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="p-4">
+                            <h3 class="text-xl font-bold text-white mb-2">Save & Import System</h3>
+                            <p class="text-gray-400 text-sm">Never lose progress. The robust <strong>IO System</strong> allows you to serialize animations to data strings, making it effortless to save backups or transfer animations between projects or team members.</p>
+                        </div>
+                        <img src="io.gif" alt="Import and Export" class="feature-img">
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="p-4">
+                            <h3 class="text-xl font-bold text-white mb-2">Intuitive Keyframing</h3>
+                            <p class="text-gray-400 text-sm">Capture motion naturally with <strong>Auto-Record</strong>, which logs changes made in the viewport directly to the timeline. For precise control, simply <strong>Double-Click</strong> on any track to insert a keyframe at the exact cursor position.</p>
+                        </div>
+                        <img src="autorecord_click.gif" alt="Timeline Interaction" class="feature-img">
                     </div>
 
                 </div>
@@ -360,6 +392,16 @@ AnimationService.SetTime(MyButton, MyAnim, 1.0)</code></pre>
             const sections = document.querySelectorAll('.content-section');
 
             const changelogData = [
+                {
+                    version: "1.7.1",
+                    date: "2025-12-18",
+                    changed: [
+                        "Signal Architecture: AnimationService.Play now returns a unique 'Session Signal' for each call. This prevents listener accumulation when reusing animations, eliminating the need for manual Disconnect() management."
+                    ],
+                    fixed: [
+                        "Reverse Interrupt Bug: Fixed a critical logic error where switching an animation from Reverse to Normal mode (or vice versa) caused the timeline cursor to jump incorrectly."
+                    ]
+                },
                 {
                     version: "1.7.0",
                     date: "2025-12-10",
