@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cascade UI | Docs</title>
+    <title>Cascade UI Animator | Docs</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -48,7 +48,7 @@
     <div id="app" class="flex min-h-screen">
 
         <div class="sidebar w-64 p-4 shadow-lg flex flex-col fixed h-full z-10">
-            <h1 class="text-2xl font-bold mb-6 text-white tracking-wider">CASCADE UI</h1>
+            <h1 class="text-2xl font-bold mb-6 text-white tracking-wider">CASCADE UI Animator</h1>
             
             <nav class="space-y-2">
                 <a href="#overview" class="nav-link block p-3 rounded-r-lg" data-target="overview">Overview</a>
@@ -68,14 +68,14 @@
 
             <section id="overview" class="content-section">
                 <h2 class="text-4xl font-bold mb-4 text-white">The One-Stop solution for UI Animations</h2>
-                <p class="mb-6 text-lg text-gray-400">Cascade UI isn't just another tween plugin. It's a full-blown layering system designed to handle complex UI states without the headache of property conflicts.</p>
+                <p class="mb-6 text-lg text-gray-400">Cascade UI Animator isn't just another tween plugin. It's a full-blown layering system designed to handle complex UI states without the headache of property conflicts.</p>
 
                 <h3 class="text-2xl font-semibold mb-3 mt-8">Why use this?</h3>
                 <p class="mb-4 text-gray-400">Standard <code>TweenService</code> is good but is limited. It fights over properties. If you try to Hover (scale up) and Click (scale down) at the same time, they break.</p>
                 <p class="mb-4 text-gray-400">Cascade's <code>AnimationService</code> is smart. It uses an <strong>Additive Accumulator</strong>. This means you can play a "Hover", a "Click", and a "Damage Shake" all on the same button, at the same time, and they blend perfectly.</p>
  
                 <div class="mb-6">
-                    <img src="trainbtn_anim.gif" alt="Example of a clean button animation created with Cascade UI showing blended click and hover effects" class="rounded-lg max-w-full border border-gray-700">
+                    <img src="trainbtn_anim.gif" alt="Example of a clean button animation created with Cascade UI Animator showing blended click and hover effects" class="rounded-lg max-w-full border border-gray-700">
                     <p class="text-sm text-gray-500 mt-2">Example: A button handling a looping glow, a hover scale, and a click punch simultaneously.</p>
                 </div>
 
@@ -278,7 +278,7 @@ AnimationService.SetTime(MyButton, MyAnim, 1.0)</code></pre>
 
             <section id="editor-features" class="content-section hidden">
                 <h2 class="text-4xl font-bold mb-6 text-white">Editor Features</h2>
-                <p class="mb-8 text-gray-400">A visual guide to the power tools inside Cascade UI.</p>
+                <p class="mb-8 text-gray-400">A visual guide to the power tools inside Cascade UI Animator.</p>
 
                 <div class="feature-grid">
                     
@@ -394,6 +394,22 @@ AnimationService.SetTime(MyButton, MyAnim, 1.0)</code></pre>
             const sections = document.querySelectorAll('.content-section');
 
             const changelogData = [
+
+                {
+                    version: "1.7.2",
+                    date: "2025-01-03",
+                    added: [
+                        "Stop Options: Added an optional 'PlayOptions' argument to AnimationService.Stop and StopBatch. This allows users to pass 'Reset' or 'ResetToStart' flags dynamically when manually interrupting an animation.",
+                        "ClearInstance: Added clear instance to the public API. 'ClearInstance', performs a complete cleanup of both the property cache and the persistent animator lifecycle connection."
+                    ],
+                    changed: [
+                        "Signal: Refactored the internal Signal class to follow standard Roblox API conventions, including Connect, Fire, Destroy, and Wait. Connect now returns a Connection object with a Disconnect() method and a Connected property.",
+                        "Playing Animationa: 'Play' now always captures the pre-animation property state. This ensures that 'Reset' functionality is available during 'Stop' even if the animation wasn't initially started with reset enabled."
+                    ],
+                    fixed: [
+                        "Looped Signal: Fixed a missing event trigger where session signals failed to fire the 'Looped' state when an animation completed a cycle."
+                    ]
+                },
                 {
                     version: "1.7.1",
                     date: "2025-12-18",
